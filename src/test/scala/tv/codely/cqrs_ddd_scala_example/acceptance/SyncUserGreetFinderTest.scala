@@ -13,7 +13,7 @@ import tv.codely.cqrs_ddd_scala_example.user_greet.infrastructure.InMemoryUserRe
 
 final class SyncUserGreetFinderTest extends WordSpec with GivenWhenThen {
 
-  "UserGreetGenerator with an SyncQueryBuas" should {
+  "UserGreetGenerator with an SyncQueryBus" should {
     "block the execution flow until getting a response from the repository" in {
 
       Given("a UserGreetGenerator with a user repository")
