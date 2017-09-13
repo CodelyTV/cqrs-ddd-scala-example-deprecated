@@ -7,12 +7,8 @@ import scala.reflect.classTag
 import org.joda.time.DateTime
 import org.scalatest._
 import org.scalatest.Matchers._
-import tv.codely.cqrs_ddd_scala_example.bus.infrastructure.SyncQueryBus
-import tv.codely.cqrs_ddd_scala_example.user_greet.application.generate.{
-  GenerateUserGreetQuery,
-  GenerateUserGreetQueryHandler,
-  UserGreetGenerator
-}
+import tv.codely.cqrs_ddd_scala_example.bus.domain.QueryBus
+import tv.codely.cqrs_ddd_scala_example.user_greet.application.generate.{GenerateUserGreetQuery, GenerateUserGreetQueryHandler, UserGreetGenerator}
 import tv.codely.cqrs_ddd_scala_example.user_greet.infrastructure.InMemoryUserRepository
 
 final class SyncUserGreetGeneratorTest extends WordSpec with GivenWhenThen {
@@ -28,7 +24,7 @@ final class SyncUserGreetGeneratorTest extends WordSpec with GivenWhenThen {
 
       And("an SyncQueryBus which block the execution flow until getting a response")
 
-      val queryBus = new SyncQueryBus(
+      val queryBus = new QueryBus(
         Map(
           classTag[GenerateUserGreetQuery] -> generateUserGreetQueryHandler
         )

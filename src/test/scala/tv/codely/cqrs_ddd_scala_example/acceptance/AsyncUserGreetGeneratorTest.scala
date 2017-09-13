@@ -7,11 +7,10 @@ import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext.Implicits.global
 
 import cats.implicits._
-
 import org.joda.time.DateTime
 import org.scalatest.Matchers._
 import org.scalatest._
-import tv.codely.cqrs_ddd_scala_example.bus.infrastructure.AsyncQueryBus
+import tv.codely.cqrs_ddd_scala_example.bus.domain.QueryBus
 import tv.codely.cqrs_ddd_scala_example.user_greet.application.generate.{GenerateUserGreetQuery, GenerateUserGreetQueryHandler, UserGreetGenerator}
 import tv.codely.cqrs_ddd_scala_example.user_greet.infrastructure.InDelayedMemoryUserRepository
 
@@ -29,7 +28,7 @@ final class AsyncUserGreetGeneratorTest extends WordSpec with GivenWhenThen {
 
       And("an AsyncQueryBus which doesn't block the execution flow until getting a response")
 
-      val queryBus = new AsyncQueryBus(Map(
+      val queryBus = new QueryBus(Map(
         classTag[GenerateUserGreetQuery] -> generateUserGreetQueryHandler
       ))
 
