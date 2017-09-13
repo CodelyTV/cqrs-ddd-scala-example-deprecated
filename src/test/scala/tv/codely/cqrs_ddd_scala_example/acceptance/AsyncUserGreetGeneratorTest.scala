@@ -6,6 +6,8 @@ import scala.reflect.classTag
 import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext.Implicits.global
 
+import cats.implicits._
+
 import org.joda.time.DateTime
 import org.scalatest.Matchers._
 import org.scalatest._
