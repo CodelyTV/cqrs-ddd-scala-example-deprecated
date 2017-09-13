@@ -3,13 +3,14 @@ package tv.codely.cqrs_ddd_scala_example.acceptance
 import java.util.UUID
 
 import scala.reflect.classTag
+import scala.concurrent.duration._
 
 import org.joda.time.DateTime
 import org.scalatest._
 import org.scalatest.Matchers._
 import tv.codely.cqrs_ddd_scala_example.bus.domain.QueryBus
 import tv.codely.cqrs_ddd_scala_example.user_greet.application.generate.{FindUserGreetQuery, FindUserGreetQueryHandler, UserGreetFinder}
-import tv.codely.cqrs_ddd_scala_example.user_greet.infrastructure.InMemoryUserRepository
+import tv.codely.cqrs_ddd_scala_example.user_greet.infrastructure.InSyncDelayedMemoryUserRepository
 
 final class SyncUserGreetFinderTest extends WordSpec with GivenWhenThen {
 
@@ -18,7 +19,8 @@ final class SyncUserGreetFinderTest extends WordSpec with GivenWhenThen {
 
       Given("a UserGreetGenerator with a user repository")
 
-      val userRepository                = new InMemoryUserRepository()
+      val notableDelay                  = 10.seconds
+      val userRepository                = new InSyncDelayedMemoryUserRepository(notableDelay)
       val userGreetGeneratorWithDelay   = new UserGreetFinder(userRepository)
       val generateUserGreetQueryHandler = new FindUserGreetQueryHandler(userGreetGeneratorWithDelay)
 
@@ -39,11 +41,12 @@ final class SyncUserGreetFinderTest extends WordSpec with GivenWhenThen {
           "1646fd5c-de2b-435f-b20f-ad1f50924dfe"
         )
       )
+
       val greeting = queryBus.ask(query)
 
-      Then("it should say hello to someone")
+      println("Query asked to the sync query bus")
 
-      pprint.log("This is a text printed once we've asked the query to the SyncQueryBus")
+      Then("it should say hello to someone")
 
       greeting.greet shouldBe "Hello Rafa"
     }
