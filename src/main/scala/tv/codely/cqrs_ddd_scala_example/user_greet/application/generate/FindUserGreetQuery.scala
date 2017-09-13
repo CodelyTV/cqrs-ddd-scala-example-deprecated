@@ -5,5 +5,5 @@ import java.util.UUID
 import org.joda.time.DateTime
 import tv.codely.cqrs_ddd_scala_example.bus.domain.Query
 
-case class GenerateUserGreetQuery(override val queryId: UUID, override val askedAt: DateTime, userId: UUID)
+case class FindUserGreetQuery(override val queryId: UUID, override val askedAt: DateTime, userId: UUID)
   extends Query(queryId, askedAt)

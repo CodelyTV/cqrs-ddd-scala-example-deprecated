@@ -8,10 +8,10 @@ import org.joda.time.DateTime
 import org.scalatest._
 import org.scalatest.Matchers._
 import tv.codely.cqrs_ddd_scala_example.bus.domain.QueryBus
-import tv.codely.cqrs_ddd_scala_example.user_greet.application.generate.{GenerateUserGreetQuery, GenerateUserGreetQueryHandler, UserGreetGenerator}
+import tv.codely.cqrs_ddd_scala_example.user_greet.application.generate.{FindUserGreetQuery, FindUserGreetQueryHandler, UserGreetFinder}
 import tv.codely.cqrs_ddd_scala_example.user_greet.infrastructure.InMemoryUserRepository
 
-final class SyncUserGreetGeneratorTest extends WordSpec with GivenWhenThen {
+final class SyncUserGreetFinderTest extends WordSpec with GivenWhenThen {
 
   "UserGreetGenerator with an SyncQueryBuas" should {
     "block the execution flow until getting a response from the repository" in {
@@ -19,20 +19,20 @@ final class SyncUserGreetGeneratorTest extends WordSpec with GivenWhenThen {
       Given("a UserGreetGenerator with a user repository")
 
       val userRepository                = new InMemoryUserRepository()
-      val userGreetGeneratorWithDelay   = new UserGreetGenerator(userRepository)
-      val generateUserGreetQueryHandler = new GenerateUserGreetQueryHandler(userGreetGeneratorWithDelay)
+      val userGreetGeneratorWithDelay   = new UserGreetFinder(userRepository)
+      val generateUserGreetQueryHandler = new FindUserGreetQueryHandler(userGreetGeneratorWithDelay)
 
       And("an SyncQueryBus which block the execution flow until getting a response")
 
       val queryBus = new QueryBus(
         Map(
-          classTag[GenerateUserGreetQuery] -> generateUserGreetQueryHandler
+          classTag[FindUserGreetQuery] -> generateUserGreetQueryHandler
         )
       )
 
       When("we ask the GenerateUserGreetQuery to the SyncQueryBus")
 
-      val query = GenerateUserGreetQuery(
+      val query = FindUserGreetQuery(
         UUID.randomUUID(),
         DateTime.now(),
         UUID.fromString(
