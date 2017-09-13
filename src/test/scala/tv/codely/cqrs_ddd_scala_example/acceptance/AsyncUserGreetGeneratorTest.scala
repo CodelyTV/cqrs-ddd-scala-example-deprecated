@@ -1,4 +1,4 @@
-package tv.codely.async_query_example.acceptance
+package tv.codely.cqrs_ddd_scala_example.acceptance
 
 import java.util.UUID
 
@@ -9,9 +9,9 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import org.joda.time.DateTime
 import org.scalatest.Matchers._
 import org.scalatest._
-import tv.codely.async_query_example.bus.infrastructure.AsyncQueryBus
-import tv.codely.async_query_example.user_greet.application.generate.{GenerateUserGreetQuery, GenerateUserGreetQueryHandler, UserGreetGenerator}
-import tv.codely.async_query_example.user_greet.infrastructure.InDelayedMemoryUserRepository
+import tv.codely.cqrs_ddd_scala_example.bus.infrastructure.AsyncQueryBus
+import tv.codely.cqrs_ddd_scala_example.user_greet.application.generate.{GenerateUserGreetQuery, GenerateUserGreetQueryHandler, UserGreetGenerator}
+import tv.codely.cqrs_ddd_scala_example.user_greet.infrastructure.InDelayedMemoryUserRepository
 
 final class AsyncUserGreetGeneratorTest extends WordSpec with GivenWhenThen {
 

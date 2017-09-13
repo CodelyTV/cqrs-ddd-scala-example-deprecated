@@ -1,5 +1,5 @@
 /** ********* PROJECT INFO ******************/
-name := "Async query example"
+name := "CQRS DDD Scala Example"
 version := "1.0"
 
 /** ********* PROJECT SETTINGS ******************/

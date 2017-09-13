@@ -1,9 +1,9 @@
-package tv.codely.async_query_example.bus.infrastructure
+package tv.codely.cqrs_ddd_scala_example.bus.infrastructure
 
 import scala.concurrent.Future
 import scala.reflect.ClassTag
 
-import tv.codely.async_query_example.bus.domain.{Query, QueryBus, QueryHandler, Response}
+import tv.codely.cqrs_ddd_scala_example.bus.domain.{Query, QueryBus, QueryHandler, Response}
 final class AsyncQueryBus[QueryType <: Query, ResponseType <: Response](
   private val handlers: Map[ClassTag[QueryType], QueryHandler[Future, QueryType, ResponseType]]
 ) extends QueryBus[Future, QueryType, ResponseType] {

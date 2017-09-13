@@ -1,11 +1,11 @@
-package tv.codely.async_query_example.user_greet.infrastructure
+package tv.codely.cqrs_ddd_scala_example.user_greet.infrastructure
 
 import java.util.UUID
 
 import scala.concurrent.Future
 import scala.concurrent.duration.FiniteDuration
 
-import tv.codely.async_query_example.user_greet.domain.{User, UserId, UserRepository}
+import tv.codely.cqrs_ddd_scala_example.user_greet.domain.{User, UserId, UserRepository}
 
 final class InDelayedMemoryUserRepository(delay: FiniteDuration) extends UserRepository[Future] {
   private val users: Map[UserId, User] = Map(

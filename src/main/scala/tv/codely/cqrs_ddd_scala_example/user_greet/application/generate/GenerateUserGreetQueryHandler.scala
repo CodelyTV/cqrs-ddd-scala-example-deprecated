@@ -1,10 +1,10 @@
-package tv.codely.async_query_example.user_greet.application.generate
+package tv.codely.cqrs_ddd_scala_example.user_greet.application.generate
 
 import cats.Functor
 import cats.implicits._
 
-import tv.codely.async_query_example.bus.domain.QueryHandler
-import tv.codely.async_query_example.user_greet.domain.UserId
+import tv.codely.cqrs_ddd_scala_example.bus.domain.QueryHandler
+import tv.codely.cqrs_ddd_scala_example.user_greet.domain.UserId
 
 final class GenerateUserGreetQueryHandler[P[_]: Functor](private val generator: UserGreetGenerator[P])
   extends QueryHandler[P, GenerateUserGreetQuery, UserGreetResponse] {

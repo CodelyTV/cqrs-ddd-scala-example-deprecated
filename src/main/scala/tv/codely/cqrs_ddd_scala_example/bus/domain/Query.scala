@@ -1,4 +1,4 @@
-package tv.codely.async_query_example.bus.domain
+package tv.codely.cqrs_ddd_scala_example.bus.domain
 
 import java.util.UUID
 
