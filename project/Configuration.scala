@@ -16,7 +16,7 @@ object Configuration {
       "-Ywarn-unused-import",
       "-Xcheckinit", // Check against early initialization
       "-language:higherKinds"
-  ),
+    ),
     scalacOptions in run in Compile -= "-Xcheckinit", // Remove it in production because it's expensive
     javaOptions += "-Duser.timezone=UTC",
     // Test options
