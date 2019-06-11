@@ -7,7 +7,8 @@ import scala.concurrent.duration.FiniteDuration
 
 import tv.codely.cqrs_ddd_scala_example.user_greet.domain.{User, UserId, UserRepository}
 
-final class InAsyncDelayedMemoryUserRepository(delay: FiniteDuration)(implicit val ec: ExecutionContext) extends UserRepository[Future] {
+final class InAsyncDelayedMemoryUserRepository(delay: FiniteDuration)(implicit val ec: ExecutionContext)
+    extends UserRepository[Future] {
   private val users: Map[UserId, User] = Map(
     UserId(UUID.fromString("1646fd5c-de2b-435f-b20f-ad1f50924dfe")) -> User(
       UserId(UUID.fromString("1646fd5c-de2b-435f-b20f-ad1f50924dfe")),

@@ -2,7 +2,7 @@ package tv.codely.cqrs_ddd_scala_example.acceptance
 
 import java.util.UUID
 
-import scala.reflect.classTag
+import scala.concurrent.Future
 import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -28,24 +28,20 @@ final class AsyncUserGreetFinderTest extends WordSpec with ScalaFutures with Giv
 
       Given("a UserGreetGenerator with a user repository with a notable delay")
 
-      val notableDelay                  = 10.seconds
+      val notableDelay                  = 3.seconds
       val userRepository                = new InAsyncDelayedMemoryUserRepository(notableDelay)
       val userGreetGeneratorWithDelay   = new UserGreetFinder(userRepository)
       val generateUserGreetQueryHandler = new FindUserGreetQueryHandler(userGreetGeneratorWithDelay)
 
       And("an AsyncQueryBus which doesn't block the execution flow until getting a response")
 
-      val queryBus = new QueryBus(
-        Map(
-          classTag[FindUserGreetQuery] -> generateUserGreetQueryHandler
-        ))
+      val queryBus = new QueryBus[Future]()
+      queryBus.subscribe(generateUserGreetQueryHandler)
 
       When("we ask the GenerateUserGreetQuery to the AsyncQueryBus")
 
-      val query = FindUserGreetQuery(
-        UUID.randomUUID(),
-        DateTime.now(),
-        UUID.fromString("1646fd5c-de2b-435f-b20f-ad1f50924dfe"))
+      val query =
+        FindUserGreetQuery(UUID.randomUUID(), DateTime.now(), UUID.fromString("1646fd5c-de2b-435f-b20f-ad1f50924dfe"))
 
       val futureGreeting = queryBus.ask(query)
 

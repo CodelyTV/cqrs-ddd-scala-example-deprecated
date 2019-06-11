@@ -2,15 +2,20 @@ package tv.codely.cqrs_ddd_scala_example.acceptance
 
 import java.util.UUID
 
-import scala.reflect.classTag
+import cats.implicits._
 import scala.concurrent.duration._
 
 import org.joda.time.DateTime
 import org.scalatest._
 import org.scalatest.Matchers._
 import tv.codely.cqrs_ddd_scala_example.bus.domain.QueryBus
-import tv.codely.cqrs_ddd_scala_example.user_greet.application.generate.{FindUserGreetQuery, FindUserGreetQueryHandler, UserGreetFinder}
-import tv.codely.cqrs_ddd_scala_example.user_greet.infrastructure.InSyncDelayedMemoryUserRepository
+import tv.codely.cqrs_ddd_scala_example.types.ThrowableTypeClasses.EitherThrowable
+import tv.codely.cqrs_ddd_scala_example.user_greet.application.generate.{
+  FindUserGreetQuery,
+  FindUserGreetQueryHandler,
+  UserGreetFinder
+}
+import tv.codely.cqrs_ddd_scala_example.user_greet.infrastructure.DelayedMemoryUserRepository
 
 final class SyncUserGreetFinderTest extends WordSpec with GivenWhenThen {
 
@@ -19,18 +24,15 @@ final class SyncUserGreetFinderTest extends WordSpec with GivenWhenThen {
 
       Given("a UserGreetGenerator with a user repository")
 
-      val notableDelay                  = 10.seconds
-      val userRepository                = new InSyncDelayedMemoryUserRepository(notableDelay)
+      val notableDelay                  = 3.seconds
+      val userRepository                = new DelayedMemoryUserRepository[EitherThrowable](notableDelay)
       val userGreetGeneratorWithDelay   = new UserGreetFinder(userRepository)
       val generateUserGreetQueryHandler = new FindUserGreetQueryHandler(userGreetGeneratorWithDelay)
 
       And("an SyncQueryBus which block the execution flow until getting a response")
 
-      val queryBus = new QueryBus(
-        Map(
-          classTag[FindUserGreetQuery] -> generateUserGreetQueryHandler
-        )
-      )
+      val queryBus = new QueryBus[EitherThrowable]()
+      queryBus.subscribe(generateUserGreetQueryHandler)
 
       When("we ask the GenerateUserGreetQuery to the SyncQueryBus")
 
@@ -42,13 +44,14 @@ final class SyncUserGreetFinderTest extends WordSpec with GivenWhenThen {
         )
       )
 
-      val greeting = queryBus.ask(query)
+      val queryResult = queryBus.ask(query)
 
       println("Query asked to the sync query bus")
 
       Then("it should say hello to someone")
 
-      greeting.greet shouldBe "Hello Rafa"
+      queryResult.isRight shouldBe true
+      queryResult.map(_.greet shouldBe "Hello Rafa")
     }
   }
 }

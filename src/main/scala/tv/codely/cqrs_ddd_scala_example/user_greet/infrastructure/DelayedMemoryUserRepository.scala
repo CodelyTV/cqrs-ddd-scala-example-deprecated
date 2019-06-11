@@ -4,10 +4,11 @@ import java.util.UUID
 
 import scala.concurrent.duration.FiniteDuration
 
-import cats.Id
+import cats.Applicative
+import cats.syntax.applicative._
 import tv.codely.cqrs_ddd_scala_example.user_greet.domain.{User, UserId, UserRepository}
 
-final class InSyncDelayedMemoryUserRepository(delay: FiniteDuration) extends UserRepository[Id] {
+final class DelayedMemoryUserRepository[P[_]: Applicative](delay: FiniteDuration) extends UserRepository[P] {
   private val users: Map[UserId, User] = Map(
     UserId(UUID.fromString("1646fd5c-de2b-435f-b20f-ad1f50924dfe")) -> User(
       UserId(UUID.fromString("1646fd5c-de2b-435f-b20f-ad1f50924dfe")),
@@ -19,11 +20,11 @@ final class InSyncDelayedMemoryUserRepository(delay: FiniteDuration) extends Use
     )
   )
 
-  override def search(userId: UserId): Id[Option[User]] = {
+  override def search(userId: UserId): P[Option[User]] = {
     println("Executing sync search (before delay)")
     Thread.sleep(delay.toMillis)
     println("Executing sync search (after delay)")
 
-    users.get(userId)
+    users.get(userId).pure
   }
 }
